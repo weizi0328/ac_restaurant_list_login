@@ -1,0 +1,32 @@
+{
+  "name": "restaurant_list",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "node models/seeds/restaurantSeeder.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "express": "^4.18.1",
+    "express-handlebars": "^4.0.6",
+    "handlebars": "^3.0.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.13.14"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weizi0328/ac_restaurant_list_crud.git"
+  },
+  "bugs": {
+    "url": "https://github.com/weizi0328/ac_restaurant_list_crud/issues"
+  },
+  "homepage": "https://github.com/weizi0328/ac_restaurant_list_crud#readme",
+  "description": ""
+}
