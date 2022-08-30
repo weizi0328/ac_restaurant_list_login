@@ -3,17 +3,19 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
+// 載入 model
 const Restaurant = require('../restaurant')
 const User = require('../user')
 
 const db = require('../../config/mongoose')
 
-const restaurantList = require('./restaurant').results
-const SEED_USER = require('./users').users
+// 載入 json 檔案 ※注意命名邏輯一致
+const restaurantList = require('./restaurants').results
+const userList = require('./users').results
 
 db.once('open', () => {
   Promise.all(
-    SEED_USER.map(user => {
+    userList.map(user => {
       bcrypt
         .genSalt(10)
         .then(salt => bcrypt.hash(user.password, salt))
