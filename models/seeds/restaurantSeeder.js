@@ -9,34 +9,39 @@ const User = require('../user')
 
 const db = require('../../config/mongoose')
 
-// 載入 json 檔案 ※注意命名邏輯一致
+// 載入 json 檔案 
+// 注意命名邏輯一致
 const restaurantList = require('./restaurants').results
 const userList = require('./users').results
 
+// 觀摩 Howard 同學的寫法
 db.once('open', () => {
-  Promise.all(
-    userList.map(user => {
-      bcrypt
-        .genSalt(10)
-        .then(salt => bcrypt.hash(user.password, salt))
-        .then(hash => User.create({
-          name: user.name,
-          email: user.email,
-          password: hash
-        }))
-        .then(user => {
-          return Promise.all(Array.from({ length: 3 }, (_, i) => {
-            const item = restaurantList[3 - i]
-            item.userId = user._id
-            restaurantList.splice(3 - i, 1)
-            return Restaurant.create(item)
-          }))
+  for (let i = 0; i < userList.length; i++) {
+    bcrypt
+      .genSalt(10)
+      .then(salt => bcrypt.hash(userList[i].password, salt))
+      .then(hash => User.create({
+        name: userList[i].name,
+        email: userList[i].email,
+        password: hash
+      }))
+      .then(user => {
+        const userId = user._id
+        // 取出 restaurants.json 中 restaurant id === userList.json 中 restaurant_needed 的資料
+        let addRestaurants = restaurantList.filter(restaurant => {
+          return userList[i].restaurant_needed.includes(restaurant.id)
         })
-    })
-  )
-    .then(() => {
-      console.log('done')
-      //process.exit()
-    })
-    .catch(err => console.log(err))
+        return Promise.all(
+          Array.from(addRestaurants, (value, index) => {
+            value.userId = userId
+            return Restaurant.create(value)
+          })
+        )
+      })
+      .then(() => {
+        console.log('user & restaurant seeders loaded!')
+        process.exit()
+      })
+      .catch(err => console.log(err))
+  }
 })
